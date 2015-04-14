@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_select"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_gravity="center">
+
+
+    <Button
+        android:id="@+id/button_tasks"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:text="@string/button_tasks"
+        style="?android:attr/borderlessButtonStyle"
+        android:background="@drawable/button_task"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="50sp"
+        android:textColor="@color/white"/>
+
+    <Button
+        android:id="@+id/button_vocabulary"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/button_vocabulary"
+        android:background="@drawable/button_vocabulary"
+        style="?android:attr/borderlessButtonStyle"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="50sp"
+        android:textColor="@color/white"/>
+</LinearLayout>
