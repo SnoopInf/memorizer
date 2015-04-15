@@ -75,7 +75,7 @@ public class UnitContract {
 
         public static final String COLUMN_TASK_CORRECT = "correctAnswer";
 
-        public static final String COLUMN_TASK_NUMBER = "number";
+        public static final String COLUMN_TASK_OID = "oid";
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_TASK).build();
@@ -103,7 +103,7 @@ public class UnitContract {
         public static final String COLUMN_WORD = "word";
         public static final String COLUMN_DEFINITION = "definition";
         public static final String COLUMN_TRANSLATION = "translation";
-        public static final String COLUMN_ENTRY_NUMBER = "number";
+        public static final String COLUMN_ENTRY_OID = "oid";
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_VOCABULARY).build();

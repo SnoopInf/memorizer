@@ -28,7 +28,7 @@ import static com.dataart.memorizer.data.UnitContract.TaskEntry;
  * Manages a local database for units data.
  */
 public class UnitDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     static final String DATABASE_NAME = "unit.db";
 
@@ -62,10 +62,9 @@ public class UnitDbHelper extends SQLiteOpenHelper {
                 VocabularyEntry.COLUMN_DEFINITION + " TEXT NOT NULL, " +
                 VocabularyEntry.COLUMN_TRANSLATION + " TEXT NOT NULL, " +
 
-                VocabularyEntry.COLUMN_ENTRY_NUMBER + " INTEGER NOT NULL," +
+                VocabularyEntry.COLUMN_ENTRY_OID + " TEXT NOT NULL," +
 
-                " UNIQUE (" + VocabularyEntry.COLUMN_UNIT_KEY + ", " +
-                VocabularyEntry.COLUMN_ENTRY_NUMBER + ") ON CONFLICT REPLACE," +
+                " UNIQUE (" + VocabularyEntry.COLUMN_ENTRY_OID + ") ON CONFLICT REPLACE," +
                // Set up the unit column as a foreign key to unit table.
                 " FOREIGN KEY (" + VocabularyEntry.COLUMN_UNIT_KEY + ") REFERENCES " +
                 UnitEntry.TABLE_NAME + " (" + UnitEntry._ID + "));";
@@ -92,10 +91,9 @@ public class UnitDbHelper extends SQLiteOpenHelper {
 
                 TaskEntry.COLUMN_TASK_TYPE + " INTEGER NOT NULL, " +
 
-                TaskEntry.COLUMN_TASK_NUMBER + " INTEGER NOT NULL, " +
+                TaskEntry.COLUMN_TASK_OID + " TEXT NOT NULL, " +
 
-                " UNIQUE (" + TaskEntry.COLUMN_UNIT_KEY + ", " +
-                TaskEntry.COLUMN_TASK_NUMBER + ") ON CONFLICT REPLACE," +
+                " UNIQUE (" + TaskEntry.COLUMN_TASK_OID + ") ON CONFLICT REPLACE," +
 
                 // Set up the unit column as a foreign key to unit table.
                 " FOREIGN KEY (" + TaskEntry.COLUMN_UNIT_KEY + ") REFERENCES " +

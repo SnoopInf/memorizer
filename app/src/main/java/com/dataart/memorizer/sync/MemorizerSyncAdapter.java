@@ -49,7 +49,7 @@ import java.util.Vector;
 public class MemorizerSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final String LOG_TAG = MemorizerSyncAdapter.class.getSimpleName();
 
-    public static final int SYNC_INTERVAL = 60 * 180;
+    public static final int SYNC_INTERVAL = 30;// * 180;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
 
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
@@ -157,7 +157,8 @@ public class MemorizerSyncAdapter extends AbstractThreadedSyncAdapter {
         final String TASK = "tasks";
         final String TASK_QUERY = "query";
         final String TASK_UNIT_NUMBER = "unit";
-        final String TASK_INDEX = "index";
+        final String TASK_ID = "_id";
+        final String TASK_OID = "$oid";
         final String TASK_DESCRIPTION = "description";
         final String TASK_ANSWER = "answer";
         final String TASK_OPTIONS = "options";
@@ -168,7 +169,8 @@ public class MemorizerSyncAdapter extends AbstractThreadedSyncAdapter {
         final String VOCABULARY = "vocabularies";
         final String VOCABULARY_WORD = "word";
         final String VOCABULARY_UNIT_NUMBER = "unit";
-        final String VOCABULARY_INDEX = "index";
+        final String VOCABULARY_ID = "_id";
+        final String VOCABULARY_OID = "$oid";
         final String VOCABULARY_DEFINITION = "definition";
         final String VOCABULARY_TRANSLATION = "translation";
         final String VOCABULARY_DELETED = "deleted";
@@ -206,13 +208,14 @@ public class MemorizerSyncAdapter extends AbstractThreadedSyncAdapter {
                 String word = vocabulary.getString(VOCABULARY_WORD);
                 String definition = vocabulary.getString(VOCABULARY_DEFINITION);
                 String translation = vocabulary.getString(VOCABULARY_TRANSLATION);
-                int index = vocabulary.getInt(VOCABULARY_INDEX);
+                JSONObject id = vocabulary.getJSONObject(VOCABULARY_ID);
+                String oid = id.getString(VOCABULARY_OID);
                 int unit = vocabulary.getInt(VOCABULARY_UNIT_NUMBER);
 
                 boolean deleted = vocabulary.optBoolean(VOCABULARY_DELETED, false);
 
                 if(deleted) {
-                    vocabularyDeleted.add(""+index);
+                    vocabularyDeleted.add(oid);
                 } else {
                     ContentValues vocabularyValue = new ContentValues();
 
@@ -220,8 +223,7 @@ public class MemorizerSyncAdapter extends AbstractThreadedSyncAdapter {
                     vocabularyValue.put(UnitContract.VocabularyEntry.COLUMN_WORD, word);
                     vocabularyValue.put(UnitContract.VocabularyEntry.COLUMN_DEFINITION, definition);
                     vocabularyValue.put(UnitContract.VocabularyEntry.COLUMN_TRANSLATION, translation);
-                    //other fields
-                    vocabularyValue.put(UnitContract.VocabularyEntry.COLUMN_ENTRY_NUMBER, index);
+                    vocabularyValue.put(UnitContract.VocabularyEntry.COLUMN_ENTRY_OID, oid);
                     Log.i(LOG_TAG, "VOC " + vocabularyValue);
                     vocabularyValues.add(vocabularyValue);
                 }
@@ -230,13 +232,14 @@ public class MemorizerSyncAdapter extends AbstractThreadedSyncAdapter {
             JSONArray tasks = json.getJSONArray(TASK);
             for(int i = 0; i < tasks.length(); i++) {
                  JSONObject task = tasks.getJSONObject(i);
-                 int index = task.getInt(TASK_INDEX);
+                JSONObject id = task.getJSONObject(TASK_ID);
+                String oid = id.getString(TASK_OID);
                 int unit = task.getInt(TASK_UNIT_NUMBER);
 
                 boolean deleted = task.optBoolean(TASK_DELETED, false);
 
                 if(deleted) {
-                    taskDeleted.add(""+index);
+                    taskDeleted.add(oid);
                 } else {
                     ContentValues taskValue = new ContentValues();
                     taskValue.put(UnitContract.TaskEntry.COLUMN_UNIT_KEY, unitsMap.get(unit));
@@ -244,7 +247,7 @@ public class MemorizerSyncAdapter extends AbstractThreadedSyncAdapter {
                     taskValue.put(UnitContract.TaskEntry.COLUMN_TASK_CORRECT, task.getString(TASK_ANSWER));
                     taskValue.put(UnitContract.TaskEntry.COLUMN_TASK_DESCRIPTION, task.getString(TASK_DESCRIPTION));
                     taskValue.put(UnitContract.TaskEntry.COLUMN_TASK_TYPE, task.getInt(TASK_TYPE));
-                    taskValue.put(UnitContract.TaskEntry.COLUMN_TASK_NUMBER, index);
+                    taskValue.put(UnitContract.TaskEntry.COLUMN_TASK_OID, oid);
 
                     JSONArray options = task.optJSONArray(TASK_OPTIONS);
                     if (options != null) {
@@ -267,7 +270,7 @@ public class MemorizerSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 if(!vocabularyDeleted.isEmpty()) {
                     String[] inClause = vocabularyDeleted.toArray(new String[vocabularyDeleted.size()]);
-                    getContext().getContentResolver().delete(UnitContract.VocabularyEntry.CONTENT_URI, UnitContract.VocabularyEntry.COLUMN_ENTRY_NUMBER + " IN  ( " + makePlaceholders(inClause.length) + ")", inClause);
+                    getContext().getContentResolver().delete(UnitContract.VocabularyEntry.CONTENT_URI, UnitContract.VocabularyEntry.COLUMN_ENTRY_OID + " IN  ( " + makePlaceholders(inClause.length) + ")", inClause);
                 }
 
             }
@@ -278,7 +281,7 @@ public class MemorizerSyncAdapter extends AbstractThreadedSyncAdapter {
                 inserted += getContext().getContentResolver().bulkInsert(UnitContract.TaskEntry.CONTENT_URI, values);
                 if(!taskDeleted.isEmpty()) {
                     String[] inClause = vocabularyDeleted.toArray(new String[taskDeleted.size()]);
-                    getContext().getContentResolver().delete(UnitContract.TaskEntry.CONTENT_URI, UnitContract.TaskEntry.COLUMN_TASK_NUMBER + " IN  ( " + makePlaceholders(inClause.length) + ")", inClause);
+                    getContext().getContentResolver().delete(UnitContract.TaskEntry.CONTENT_URI, UnitContract.TaskEntry.COLUMN_TASK_OID + " IN  ( " + makePlaceholders(inClause.length) + ")", inClause);
                 }
 
             }

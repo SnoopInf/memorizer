@@ -104,10 +104,10 @@ public class TaskActivity extends ActionBarActivity implements  LoaderManager.Lo
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+       /* if (id == R.id.action_settings) {
             return true;
         }
-
+*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -115,7 +115,7 @@ public class TaskActivity extends ActionBarActivity implements  LoaderManager.Lo
     @Override
     public void onContinue(boolean success) {
         if(success) {
-            successCount++;
+            ++successCount;
         }
         if(idx >= total) {
             if(successCount >= ((int)total * UnitsActivity.NEXT_UNIT_BARRIER)) {
