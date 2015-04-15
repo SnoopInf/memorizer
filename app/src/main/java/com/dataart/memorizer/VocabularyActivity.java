@@ -36,7 +36,7 @@ public class VocabularyActivity extends ActionBarActivity implements  LoaderMana
     private Cursor mCursor;
     private int mCount;
     private int idx;
-    private List<Integer> ids;
+    private ArrayList<Integer> ids;
 
     private static final int VOCABULARY_LOADER_ID = 43;
 
@@ -57,7 +57,6 @@ public class VocabularyActivity extends ActionBarActivity implements  LoaderMana
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vocabulary);
         mUri = getIntent().getData();
-        getSupportLoaderManager().initLoader(VOCABULARY_LOADER_ID, null, this);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new EmptyFragmentWithProgress())
@@ -65,6 +64,11 @@ public class VocabularyActivity extends ActionBarActivity implements  LoaderMana
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportLoaderManager().initLoader(VOCABULARY_LOADER_ID, null, this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -128,32 +132,48 @@ public class VocabularyActivity extends ActionBarActivity implements  LoaderMana
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.i(LOG_TAG, "Loaded data");
         if (data != null && data.moveToFirst()) {
             mCursor = data;
             mCount = data.getCount();
-
-            ids = new ArrayList<>(mCount);
-            for(int i = 0; i < mCount; i++) {
-                ids.add(i);
-            }
-            Collections.shuffle(ids);
-
-            idx = 0;
-
-            final int WHAT = 1;
-            Handler handler = new Handler(){
-                @Override
-                public void handleMessage(Message msg) {
-                    if(msg.what == WHAT) changeFragment();
+            if(ids == null) {
+                ids = new ArrayList<>(mCount);
+                for (int i = 0; i < mCount; i++) {
+                    ids.add(i);
                 }
-            };
-            handler.sendEmptyMessage(WHAT);
+                Collections.shuffle(ids);
+
+                idx = 0;
+
+                final int WHAT = 1;
+                Handler handler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        if (msg.what == WHAT) changeFragment();
+                    }
+                };
+                handler.sendEmptyMessage(WHAT);
+            }
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("idx", idx);
+        savedInstanceState.putIntegerArrayList("ids", ids);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        idx = savedInstanceState.getInt("idx");
+        ids = savedInstanceState.getIntegerArrayList("ids");
     }
 
     /**

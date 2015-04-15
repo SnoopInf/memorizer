@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.dataart.memorizer.TaskActivity$PlaceholderFragment"
     android:orientation="vertical">
@@ -11,7 +11,6 @@
         android:id="@+id/task_instructions"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="10dp"
         android:text="Word"
         android:singleLine="false"
         android:gravity="start"
@@ -39,57 +38,23 @@
             android:singleLine="false"
             android:gravity="center"
             android:fontFamily="sans-serif-condensed"
-            android:textAppearance="?android:textAppearanceLarge"/>
+            android:textAppearance="?android:textAppearanceLarge"
+            android:elevation="5dp" />
 
     </android.support.v7.widget.CardView>
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="16dp">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:id="@+id/task_button_option1"
-                android:text="Option 1"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:id="@+id/task_button_option2"
-                android:text="Option 2"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:id="@+id/task_button_option3"
-                android:text="Option 3"/>
-            <Button
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-                android:id="@+id/task_button_option4"
-                android:text="Option 4"/>
+        android:layout_height="50dp"
+        android:gravity="center">
+    <EditText
+        android:id="@+id/task_type_in"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="@string/translation"
+        android:singleLine="true" />
+    </FrameLayout>
 
-        </LinearLayout>
-    </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -106,7 +71,8 @@
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceLarge"
             android:textColor="@color/white"
-            style="?android:attr/borderlessButtonStyle"/>
+            style="?android:attr/borderlessButtonStyle"
+            android:elevation="1dp" />
         <Button
             android:layout_width="match_parent"
             android:layout_marginLeft="16dp"
@@ -119,6 +85,7 @@
             android:fontFamily="sans-serif-condensed"
             android:textAppearance="?android:textAppearanceLarge"
             android:textColor="@color/white"
-            style="?android:attr/borderlessButtonStyle"/>
+            style="?android:attr/borderlessButtonStyle"
+            android:elevation="5dp" />
     </FrameLayout>
 </LinearLayout>

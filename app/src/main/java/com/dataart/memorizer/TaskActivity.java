@@ -49,7 +49,7 @@ public class TaskActivity extends ActionBarActivity implements  LoaderManager.Lo
     private int idx;
     private int successCount;
     private int total = TOTAL_TASK_ROUND;
-    private List<Integer> taskIds;
+    private ArrayList<Integer> taskIds;
 
     private static final int TASK_LOADER_ID = 44;
 
@@ -84,14 +84,18 @@ public class TaskActivity extends ActionBarActivity implements  LoaderManager.Lo
         setContentView(R.layout.activity_task);
         mTaskInfo = (TextView) findViewById(R.id.task_info);
         mUri = getIntent().getData();
-        getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
+           getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new EmptyFragmentWithProgress())
                     .commit();
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -186,12 +190,14 @@ public class TaskActivity extends ActionBarActivity implements  LoaderManager.Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.i(LOG_TAG, "Loaded tasks");
         if (data != null && data.moveToFirst()) {
-            mCursor = data;
-            mCount = data.getCount();
-
-            total = Math.min(TOTAL_TASK_ROUND, mCount);
-            generateIds();
+                mCursor = data;
+                mCount = data.getCount();
+                total = Math.min(TOTAL_TASK_ROUND, mCount);
+                if(taskIds == null) {
+                    generateIds();
+                }
         }
     }
 
@@ -202,8 +208,7 @@ public class TaskActivity extends ActionBarActivity implements  LoaderManager.Lo
         }
         Collections.shuffle(ids);
 
-        idx = 0;
-        taskIds = ids.subList(0, total);
+        taskIds = new ArrayList<>(ids.subList(0, total));
 
         final int WHAT = 1;
         Handler handler = new Handler(){
@@ -213,6 +218,25 @@ public class TaskActivity extends ActionBarActivity implements  LoaderManager.Lo
             }
         };
         handler.sendEmptyMessage(WHAT);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("success", successCount);
+        savedInstanceState.putInt("idx", idx);
+        savedInstanceState.putInt("total", total);
+        savedInstanceState.putIntegerArrayList("ids", taskIds);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        successCount = savedInstanceState.getInt("success");
+        idx = savedInstanceState.getInt("idx");
+        total = savedInstanceState.getInt("total");
+        taskIds = savedInstanceState.getIntegerArrayList("ids");
+        mTaskInfo.setText(idx + "/" + total);
     }
 
     private void changeFragment() {
